@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Meditate-Dream-Learn",
+    "slug": "meditate-dream-learn",
+    "owner": "hidreamers",
+    "version": "1.0.0",
+    "sdkVersion": "53.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/images/favicon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/favicon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.hidreamers.meditatedreamlearn"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ac32c983-aea4-435a-a941-3f1dc03a81a9"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-web-browser",
+      "expo-av"
+    ],
+    "scheme": "meditatedreamlearn"
+  },
+  "cli": {
+    "appVersionSource": "appVersion"
+  }
+}

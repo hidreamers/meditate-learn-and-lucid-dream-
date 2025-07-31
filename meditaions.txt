@@ -1,0 +1,116 @@
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+export default function Page() {
+  return (
+    <LinearGradient
+      colors={['#3a1c71', '#b993d6', '#fff']}
+      style={styles.gradientBackground}
+    >
+      {/* Fixed Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Meditation Resources</Text>
+        <Text style={styles.headerSubtitle}>Curated for Deep Relaxation</Text>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Page content goes here */}
+        <View style={styles.pageContent}>
+          <Text style={styles.sectionTitle}>Video and Audio Links</Text>
+          <Text style={styles.linkItem}>
+            Deep Healing Meditation: Didgeridoo, Theta Waves & 61 Points of Relaxation
+            {'\n'}
+            <Text style={styles.link}>
+              https://youtu.be/U-OoFVeq16I?si=rAQQjaIKhhTH3P7v
+            </Text>
+          </Text>
+          <Text style={styles.linkItem}>
+            61_Point_Relxation
+            {'\n'}
+            <Text style={styles.link}>
+              https://youtu.be/4-yWJrL1Wyc?si=8wemevCjfWowUVdf
+            </Text>
+          </Text>
+          <Text style={styles.linkItem}>
+            Open Your Heart
+            {'\n'}
+            <Text style={styles.link}>
+              https://youtu.be/q8xrwOck07Q?si=mXBkqjvKta83JCIG
+            </Text>
+          </Text>
+          <Text style={styles.linkItem}>
+            I am Connected Meditation
+            {'\n'}
+            <Text style={styles.link}>
+              https://youtu.be/9JLsmoTqUSQ
+            </Text>
+          </Text>
+          <Text style={styles.linkItem}>
+            Lucid Dreaming Audio Meditation
+            {'\n'}
+            <Text style={styles.link}>
+              https://www.hidreamers.com/wp-content/uploads/2025/06/lucid_Dreaming.mp3
+            </Text>
+          </Text>
+        </View>
+      </ScrollView>
+    </LinearGradient>
+  );
+}
+
+const HEADER_HEIGHT = 90; // Adjust if your header is taller/shorter
+
+const styles = StyleSheet.create({
+  gradientBackground: {
+    flex: 1,
+  },
+  header: {
+    height: HEADER_HEIGHT,
+    paddingTop: 36,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingTop: HEADER_HEIGHT, // So content starts below the header
+    paddingBottom: 24,
+  },
+  pageContent: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#3a1c71',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  linkItem: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 12,
+  },
+  link: {
+    color: '#3a1c71',
+    textDecorationLine: 'underline',
+  },
+});
