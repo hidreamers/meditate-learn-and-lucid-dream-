@@ -5,6 +5,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 export {
   ErrorBoundary,
@@ -52,8 +54,6 @@ function RootLayoutNav() {
         <Stack.Screen name="technique/[id]" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
-  );
-}
   );
 }
 
