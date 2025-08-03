@@ -1,17 +1,12 @@
 ﻿import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#3a1c71',
         headerShown: false,
       }}>
       <Tabs.Screen
@@ -19,7 +14,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={28} color={color} />
           ),
         }}
       />
@@ -28,7 +23,7 @@ export default function TabLayout() {
         options={{
           title: 'Meditation',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'leaf' : 'leaf-outline'} color={color} />
+            <Ionicons name={focused ? 'leaf' : 'leaf-outline'} size={28} color={color} />
           ),
         }}
       />
@@ -37,7 +32,7 @@ export default function TabLayout() {
         options={{
           title: 'Binaural Beats',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'musical-notes' : 'musical-notes-outline'} color={color} />
+            <Ionicons name={focused ? 'musical-notes' : 'musical-notes-outline'} size={28} color={color} />
           ),
         }}
       />
@@ -46,8 +41,13 @@ export default function TabLayout() {
         options={{
           title: 'Dream Journal',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'book' : 'book-outline'} color={color} />
+            <Ionicons name={focused ? 'book' : 'book-outline'} size={28} color={color} />
           ),
+        }}
+      />
+    </Tabs>
+  );
+}
         }}
       />
     </Tabs>
