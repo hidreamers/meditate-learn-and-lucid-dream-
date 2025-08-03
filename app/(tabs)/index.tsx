@@ -309,6 +309,11 @@ export default function TabIndex() {
     };
   }, [journalOn]);
 
+  // Add this effect to log when this screen is mounted
+  useEffect(() => {
+    console.log('TabIndex (Home) mounted');
+  }, []);
+
   useEffect(() => {
     return () => {
       if (nightIntervalRef.current) clearInterval(nightIntervalRef.current);

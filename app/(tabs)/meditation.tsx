@@ -16,9 +16,6 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import YoutubePlayer from 'react-native-youtube-iframe';
-import * as Linking from 'expo-linking';
-// If using Expo, install expo-file-system and expo-web-browser for PDF viewing
 import * as WebBrowser from 'expo-web-browser';
 import { Audio } from 'expo-av';
 
@@ -380,8 +377,8 @@ export default function Meditation(props) {
 
   const handlePress = (med: any) => {
     if (med.videoUrl) {
-      setSelectedTrack(med);
-      setModalVisible(true);
+      // Open videos directly in browser instead of modal
+      WebBrowser.openBrowserAsync(med.videoUrl);
     } else if (med.pdf) {
       setPdfUrl(med.pdf);
       setPdfModalVisible(true);
@@ -533,67 +530,7 @@ export default function Meditation(props) {
         ))}
       </ScrollView>
 
-      {/* Video Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={handleCloseModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContentFixed}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={handleCloseModal}
-            >
-              <Ionicons name="close" size={24} color="#fff" />
-            </TouchableOpacity>
-            {selectedTrack && selectedTrack.videoUrl ? (
-              <>
-                <View style={{ alignItems: 'center', marginBottom: 20 }}>
-                  <Animated.View
-                    style={[
-                      styles.breatheCircle,
-                      { transform: [{ scale: breatheScale }] },
-                    ]}
-                  />
-                  <Animated.Image
-                    source={{ uri: selectedTrack.image }}
-                    style={[
-                      styles.playerImage,
-                      { transform: [{ rotate: spin }] },
-                    ]}
-                  />
-                </View>
-                <Text style={styles.playerTitle}>{selectedTrack.title}</Text>
-                <View style={{ width: width - 40, aspectRatio: 16 / 9, marginBottom: 20, alignSelf: 'center' }}>
-                  <YoutubePlayer
-                    height={220}
-                    play={isPlaying}
-                    videoId={getYoutubeId(selectedTrack.videoUrl)}
-                    onChangeState={event => {
-                      if (event === 'ended') setIsPlaying(false);
-                    }}
-                  />
-                </View>
-                <View style={styles.meditationTips}>
-                  <Text style={styles.tipsTitle}>Meditation Tips</Text>
-                  <Text style={styles.tipText}>• Find a quiet, comfortable place</Text>
-                  <Text style={styles.tipText}>• Focus on your breathing</Text>
-                  <Text style={styles.tipText}>• Let thoughts come and go without judgment</Text>
-                  <Text style={styles.tipText}>• If your mind wanders, gently bring it back</Text>
-                </View>
-              </>
-            ) : (
-              <View style={{ height: 300, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#3a1c71" />
-              </View>
-            )}
-          </View>
-        </View>
-      </Modal>
-
-      {/* PDF Modal (opens in browser for best compatibility) */}
+      {/* PDF Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -693,8 +630,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 2,
   },
-  container: { flex: 1, backgroundColor: '#f8f9fa' },
-  // ... rest of your existing styles
   scrollContent: {
     padding: 20,
     paddingBottom: 40,
@@ -727,7 +662,9 @@ const styles = StyleSheet.create({
     marginRight: 18,
     backgroundColor: '#eee',
   },
-  textContainer: { flex: 1 },
+  textContainer: { 
+    flex: 1 
+  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -754,6 +691,69 @@ const styles = StyleSheet.create({
     color: '#3a1c71',
     marginLeft: 3,
   },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContentFixed: {
+    backgroundColor: '#1a1a2e',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: 50,
+    padding: 20,
+    alignSelf: 'center',
+    width: width - 20,
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 10,
+  },
+  playerImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  breatheCircle: {
+    position: 'absolute',
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    top: '50%',
+    left: '50%',
+    marginTop: -70,
+    marginLeft: -70,
+  },
+  playerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  meditationTips: {
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    width: '100%',
+  },
+  tipsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffaf7b',
+    marginBottom: 8,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#fff',
+    marginBottom: 4,
+  },
+});
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.7)',
