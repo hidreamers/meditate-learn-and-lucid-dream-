@@ -484,7 +484,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignSelf: 'center',
   },
-  dropdownContainer: { padding: 8 },
+  dropdownContainer: { 
+    padding: 8 
+  },
   dropdownToggle: {
     backgroundColor: '#3a1c71',
     borderRadius: 8,
@@ -555,8 +557,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-  },
-  screensaverButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
