@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import YoutubePlayer from 'react-native-youtube-iframe';
+
 import * as Linking from 'expo-linking';
 // If using Expo, install expo-file-system and expo-web-browser for PDF viewing
 import * as WebBrowser from 'expo-web-browser';
