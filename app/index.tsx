@@ -31,9 +31,9 @@ export default function TabIndex() {
   const [nightPracticeOn, setNightPracticeOn] = useState(false);
   const [dayPracticeOn, setDayPracticeOn] = useState(false);
   const [meditationOn, setMeditationOn] = useState(false);
-  const [journalOn, setJournalOn] = useState(false);  const [screenSaverVisible, setScreenSaverVisible] = useState(false);
+  const [journalOn, setJournalOn] = useState(false);
+  const [screenSaverVisible, setScreenSaverVisible] = useState(false);
   const [showGettingStarted, setShowGettingStarted] = useState(false);
-  const [showTapNavigation, setShowTapNavigation] = useState(false);
 
   // Sound toggles
   const [nightSoundOn, setNightSoundOn] = useState(true);
@@ -100,6 +100,7 @@ export default function TabIndex() {
       }
     }
   };
+
   const scheduleNightPracticeNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -150,6 +151,7 @@ export default function TabIndex() {
       }
     }
   };
+
   const scheduleDayPracticeNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -190,6 +192,7 @@ export default function TabIndex() {
   const triggerMeditation = () => {
     Alert.alert('Meditation Reminder', 'Take a moment to meditate and reflect.');
   };
+
   const scheduleMeditationNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -230,6 +233,7 @@ export default function TabIndex() {
   const triggerJournal = () => {
     Alert.alert('Journal Reminder', 'Write a quick journal entry about your day or dreams.');
   };
+
   const scheduleJournalNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -292,7 +296,8 @@ export default function TabIndex() {
   return (
     <LinearGradient
       colors={['#3a1c71', '#b993d6', '#fff']}
-      style={styles.gradientBackground}    >      {/* Header at the top, outside ScrollView */}
+      style={styles.gradientBackground}
+    >
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Meditate. Learn. Dream.</Text>
         <Text style={styles.headerSubtitle}>Your guide to conscious dreaming and mindful transformation</Text>
@@ -431,7 +436,9 @@ export default function TabIndex() {
             onReminderChange={setJournalOn}
             countdown={formatCountdown(journalCountdown)}
           />
-        </View>        <TouchableOpacity
+        </View>
+
+        <TouchableOpacity
           style={styles.screensaverButton}
           onPress={() => setScreenSaverVisible(true)}
         >
@@ -557,9 +564,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
-
