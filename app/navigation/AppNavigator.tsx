@@ -5,7 +5,6 @@ import DreamJournal from '../(tabs)/dream-journal';
 import Books from '../(tabs)/books';
 import RealityChecks from '../(tabs)/reality-checks';
 import Meditation from '../(tabs)/meditation';
-import JoeDispenza from '../(tabs)/joe-dispenza';
 import About from '../(tabs)/about';
 import Index from '../(tabs)/index';
 import { Ionicons } from '@expo/vector-icons';
@@ -64,15 +63,6 @@ export default function AppNavigator() {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="musical-notes-outline" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Joe Dispenza"
-          component={JoeDispenza}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="play-circle" color={color} size={size} />
             ),
           }}
         />

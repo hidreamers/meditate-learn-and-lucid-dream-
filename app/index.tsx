@@ -18,7 +18,6 @@ const TABS = [
   { name: 'Reality Checks', route: '/reality-checks', description: 'Perform and track your daily reality checks.' },
   { name: 'Meditations', route: '/meditation', description: 'Guided meditations to help with lucid dreaming.' },
   { name: 'Binaural Beats', route: '/binaural-beats', description: 'Listen to binaural beats to enhance meditation and relaxation.' },
-  { name: 'Joe Dispenza Meditations', route: '/joe-dispenza', description: 'Special meditations by Dr. Joe Dispenza.' },
   { name: 'About', route: '/about', description: 'Learn about the app and lucid dreaming.' },
   { name: 'Books', route: '/books', description: 'Recommended reading and resources for lucid dreaming.' },
   { name: 'Instructions', route: '/instructions', description: 'Step-by-step instructions for using the app and lucid dreaming techniques.' },
@@ -440,13 +439,6 @@ export default function TabIndex() {
           <Text style={styles.screensaverButtonText}>Activate Screensaver</Text>
         </TouchableOpacity>
 
-        {/* Tap Navigation Button */}
-        <TouchableOpacity onPress={() => setShowTapNavigation(!showTapNavigation)}>
-          <Text style={{ color: '#3a1c71', fontWeight: 'bold', fontSize: 16, textAlign: 'center', marginTop: 12 }}>
-            {showTapNavigation ? 'Hide Navigation' : 'Show Navigation'}
-          </Text>
-        </TouchableOpacity>
-
         <Modal visible={screenSaverVisible} animationType="fade" transparent={false}>
           <ScreenSaver onExit={() => setScreenSaverVisible(false)} />
         </Modal>
@@ -556,6 +548,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 4,
     marginBottom: 0,
+  },
+  screensaverButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
   },
   screensaverButtonText: {
     color: '#fff',

@@ -16,7 +16,7 @@ const TABS = [
   { name: 'Home', route: '/', description: 'Main dashboard and entry point for the app.' },
   { name: 'Reality Checks', route: '/reality-checks', description: 'Perform and track your daily reality checks.' },
   { name: 'Meditations', route: '/meditation', description: 'Guided meditations to help with lucid dreaming.' },
-  { name: 'Joe Dispenza Meditations', route: '/joe-dispenza', description: 'Special meditations by Dr. Joe Dispenza.' },
+
   { name: 'Binaural Beats', route: '/binaural-beats', description: 'Custom binaural beat audio sessions with multiple loop mixing.' },
   { name: 'About', route: '/about', description: 'Learn about the app and lucid dreaming.' },
   { name: 'Books', route: '/books', description: 'Recommended reading and resources for lucid dreaming.' },
