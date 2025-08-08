@@ -74,6 +74,7 @@ function DreamCard({
 }
 
 export default function TabIndex() {
+  console.log('TabIndex: render start');
   const [showDropdown, setShowDropdown] = useState(false);
   const [nightPracticeOn, setNightPracticeOn] = useState(false);
   const [dayPracticeOn, setDayPracticeOn] = useState(false);
@@ -206,6 +207,7 @@ export default function TabIndex() {
     });
   };
   useEffect(() => {
+    console.log('TabIndex: dayPracticeOn changed', dayPracticeOn);
     if (dayPracticeOn) {
       triggerDayPractice();
       scheduleDayPracticeNotification();
@@ -245,6 +247,7 @@ export default function TabIndex() {
     });
   };
   useEffect(() => {
+    console.log('TabIndex: meditationOn changed', meditationOn);
     if (meditationOn) {
       triggerMeditation();
       scheduleMeditationNotification();
@@ -284,6 +287,7 @@ export default function TabIndex() {
     });
   };
   useEffect(() => {
+    console.log('TabIndex: journalOn changed', journalOn);
     if (journalOn) {
       triggerJournal();
       scheduleJournalNotification();
@@ -316,6 +320,7 @@ export default function TabIndex() {
 
   useEffect(() => {
     return () => {
+      console.log('TabIndex: unmounted');
       if (nightIntervalRef.current) clearInterval(nightIntervalRef.current);
       if (nightTimerRef.current) clearInterval(nightTimerRef.current);
       if (dayIntervalRef.current) clearInterval(dayIntervalRef.current);
@@ -343,7 +348,7 @@ export default function TabIndex() {
       style={styles.gradientBackground}
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Meditate. Learn. Dream.</Text>
+        <Text style={styles.headerTitle}>Meditate Learn and Lucid Dream</Text>
         <Text style={styles.headerSubtitle}>Your guide to conscious dreaming and mindful transformation</Text>
       </View>
 
@@ -446,9 +451,7 @@ export default function TabIndex() {
               <Text style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>
                 <Text style={{ fontWeight: 'bold', color: '#3a1c71' }}>4. Binaural Beats:</Text> Navigate to the Binaural Beats tab to access custom audio sessions. Select multiple loops for each ear to create personalized soundscapes. Choose from Delta (deep sleep), Theta (meditation), Alpha (relaxation), Beta (focus), Gamma (peak consciousness), and nature sounds like Ocean and Thunder. Use headphones for the full binaural effect. Mix different frequencies to enhance lucid dreaming, meditation, or relaxation states.
               </Text>
-              <Text style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>
-                <Text style={{ fontWeight: 'bold', color: '#3a1c71' }}>5. Tab Navigation:</Text> Use the tabs at the bottom of the screen to quickly switch between Dream Journal, Reality Checks, MILD Practice, Binaural Beats, and other features. Just tap a tab icon to go directly to that section.
-              </Text>
+            
               <Text style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>
                 <Text style={{ fontWeight: 'bold', color: '#3a1c71' }}>6. Screensaver & Reminders:</Text> Activate the screensaver to keep your phone awake and ensure reminders continue to work. This is helpful if you want to keep reality check reminders running overnight or during naps.
               </Text>
@@ -467,33 +470,7 @@ export default function TabIndex() {
           resizeMode="contain"
         />
 
-        {/* Dropdown Navigation */}
-        <View style={styles.dropdownContainer}>
-          <TouchableOpacity
-            style={styles.dropdownToggle}
-            onPress={() => setShowDropdown(!showDropdown)}
-          >
-            <Text style={styles.dropdownToggleText}>
-              {showDropdown ? 'Hide Tab Navigation' : 'Show Tab Navigation'}
-            </Text>
-          </TouchableOpacity>
-          {showDropdown && (
-            <View style={styles.dropdownContent}>
-              {TABS.map(tab => (
-                <View key={tab.route} style={styles.dropdownItem}>
-                  <Text style={styles.tabName}>{tab.name}</Text>
-                  <Text style={styles.tabDesc}>{tab.description}</Text>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => router.push(tab.route)}
-                  >
-                    <Text style={styles.buttonText}>Go to {tab.name}</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
+        
 
         {/* Nicer Cards with Functionality */}
         <View style={styles.cardContainer}>

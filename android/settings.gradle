@@ -1,0 +1,17 @@
+
+
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+includeBuild('../node_modules/@react-native/gradle-plugin')
+includeBuild('../node_modules/expo')
+
+rootProject.name = 'Meditate Learn and Lucid Dream'
+
+include ':app'

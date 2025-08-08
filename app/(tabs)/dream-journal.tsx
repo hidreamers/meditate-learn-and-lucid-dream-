@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, ImageBackground, ScrollView } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -91,121 +91,112 @@ export default function DreamJournalScreen() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ImageBackground
-        source={{ uri: 'https://www.hidreamers.com/wp-content/uploads/2025/06/dream-journal.png' }}
+      <LinearGradient
+        colors={['#3a1c71', '#b993d6', '#fff']}
         style={{ flex: 1 }}
-        blurRadius={2}
       >
-        <LinearGradient
-          colors={['#3a1c71', '#b993d6', '#fff']}
-          style={styles.gradientBackground}
-        >
-          <View style={[styles.container, { backgroundColor: 'rgba(26,22,70,0.85)' }]}>
-            <Text style={styles.header}>Dream Journal</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Write your dream here..."
-              placeholderTextColor="#d1c4e9"
-              value={dreamText}
-              onChangeText={setDreamText}
-              multiline
-            />
-            <TouchableOpacity style={styles.addButton} onPress={handleAddDream}>
-              <Text style={styles.addButtonText}>Add Dream</Text>
-            </TouchableOpacity>
+        <View style={[styles.container, { backgroundColor: 'rgba(26,22,70,0.85)' }]}>
+          <Text style={styles.header}>Dream Journal</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Write your dream here..."
+            placeholderTextColor="#d1c4e9"
+            value={dreamText}
+            onChangeText={setDreamText}
+            multiline
+          />
+          <TouchableOpacity style={styles.addButton} onPress={handleAddDream}>
+            <Text style={styles.addButtonText}>Add Dream</Text>
+          </TouchableOpacity>
 
-            <Text style={styles.sectionTitle}>Your Dreams</Text>
-            <FlatList
-              data={dreamEntries}
-              keyExtractor={(_, idx) => idx.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.entry} onPress={() => startEdit(item.date, item.text)}>
-                  <Text style={styles.dreamText}>{item.text}</Text>
-                  <Text style={styles.dreamDate}>{formatDate(item.date)}</Text>
-                  <Text style={styles.editHint}>Tap to edit</Text>
+          <Text style={styles.sectionTitle}>Your Dreams</Text>
+          <FlatList
+            data={dreamEntries}
+            keyExtractor={(_, idx) => idx.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.entry} onPress={() => startEdit(item.date, item.text)}>
+                <Text style={styles.dreamText}>{item.text}</Text>
+                <Text style={styles.dreamDate}>{formatDate(item.date)}</Text>
+                <Text style={styles.editHint}>Tap to edit</Text>
+              </TouchableOpacity>
+            )}
+            ListEmptyComponent={<Text style={styles.empty}>No dreams yet. Start journaling!</Text>}
+            style={{ marginBottom: 10 }}
+          />
+
+          {/* Analyze My Dreams button opens modal */}
+          <TouchableOpacity
+            style={styles.analyzeButton}
+            onPress={() => {
+              setDreamSigns(extractDreamSigns(dreamEntries));
+              setDreamSignsModalVisible(true);
+            }}
+          >
+            <Text style={styles.analyzeButtonText}>Analyze My Dreams</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.clearButton} onPress={handleClearDreams}>
+            <Text style={styles.clearButtonText}>Clear All Dreams</Text>
+          </TouchableOpacity>
+
+          {/* Edit Dream Modal */}
+          <Modal visible={!!editingId} transparent animationType="slide">
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Edit Dream</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editText}
+                  onChangeText={setEditText}
+                  multiline
+                />
+                <TouchableOpacity style={styles.saveButton} onPress={saveEdit}>
+                  <Text style={styles.saveButtonText}>Save</Text>
                 </TouchableOpacity>
-              )}
-              ListEmptyComponent={<Text style={styles.empty}>No dreams yet. Start journaling!</Text>}
-              style={{ marginBottom: 10 }}
-            />
-
-            {/* Analyze My Dreams button opens modal */}
-            <TouchableOpacity
-              style={styles.analyzeButton}
-              onPress={() => {
-                setDreamSigns(extractDreamSigns(dreamEntries));
-                setDreamSignsModalVisible(true);
-              }}
-            >
-              <Text style={styles.analyzeButtonText}>Analyze My Dreams</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.clearButton} onPress={handleClearDreams}>
-              <Text style={styles.clearButtonText}>Clear All Dreams</Text>
-            </TouchableOpacity>
-
-            {/* Edit Dream Modal */}
-            <Modal visible={!!editingId} transparent animationType="slide">
-              <View style={styles.modalOverlay}>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Edit Dream</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={editText}
-                    onChangeText={setEditText}
-                    multiline
-                  />
-                  <TouchableOpacity style={styles.saveButton} onPress={saveEdit}>
-                    <Text style={styles.saveButtonText}>Save</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => setEditingId(null)}>
-                    <Text style={styles.cancelButtonText}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => setEditingId(null)}>
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
-            </Modal>
+            </View>
+          </Modal>
 
-            {/* Dream Signs Modal */}
-            <Modal
-              visible={dreamSignsModalVisible}
-              transparent
-              animationType="slide"
-              onRequestClose={() => setDreamSignsModalVisible(false)}
-            >
-              <View style={styles.modalOverlay}>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Recurring Dream Signs</Text>
-                  <ScrollView style={{ maxHeight: 300 }}>
-                    {dreamSigns.length > 0 ? (
-                      dreamSigns.map(([sign, count], idx) => (
-                        <Text key={idx} style={styles.dreamSign}>
-                          {'\u2022'} {sign} <Text style={{ color: '#888' }}>({count})</Text>
-                        </Text>
-                      ))
-                    ) : (
-                      <Text style={styles.empty}>No recurring dream signs found yet.</Text>
-                    )}
-                  </ScrollView>
-                  <TouchableOpacity
-                    style={styles.saveButton}
-                    onPress={() => setDreamSignsModalVisible(false)}
-                  >
-                    <Text style={styles.saveButtonText}>Close</Text>
-                  </TouchableOpacity>
-                </View>
+          {/* Dream Signs Modal */}
+          <Modal
+            visible={dreamSignsModalVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setDreamSignsModalVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Recurring Dream Signs</Text>
+                <ScrollView style={{ maxHeight: 300 }}>
+                  {dreamSigns.length > 0 ? (
+                    dreamSigns.map(([sign, count], idx) => (
+                      <Text key={idx} style={styles.dreamSign}>
+                        {'\u2022'} {sign} <Text style={{ color: '#888' }}>({count})</Text>
+                      </Text>
+                    ))
+                  ) : (
+                    <Text style={styles.empty}>No recurring dream signs found yet.</Text>
+                  )}
+                </ScrollView>
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={() => setDreamSignsModalVisible(false)}
+                >
+                  <Text style={styles.saveButtonText}>Close</Text>
+                </TouchableOpacity>
               </View>
-            </Modal>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
+            </View>
+          </Modal>
+        </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  gradientBackground: {
-    flex: 1,
-  },
   container: { flex: 1, padding: 20 },
   header: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 16, textAlign: 'center', textShadowColor: '#3a1c71', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 8 },
   input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginBottom: 12, backgroundColor: '#fff', minHeight: 60, color: '#3a1c71' },

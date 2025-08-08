@@ -15,12 +15,7 @@ export const Colors = {
     text: '#ECEDEE',
     background: '#151718',
     tint: tintColorDark,
-    tabIconDefault: '#666', // Fixed: Added missing semicolon
-    tabIconSelected: tintColorDark,
-    primary: '#bb86fc',
-    secondary: '#03dac6',
-  },
-};
+    tabIconDefault: '#666',
     tabIconSelected: tintColorDark,
     primary: '#bb86fc',
     secondary: '#03dac6',

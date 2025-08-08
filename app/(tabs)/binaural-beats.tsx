@@ -1,7 +1,10 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, StatusBar, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
+import { usePremium } from '../../contexts/PremiumContext';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const LOOPS = [
   {
@@ -52,32 +55,36 @@ const LOOPS = [
 ];
 
 export default function BinauralBeats() {
-  // Ensure initial selections are valid indices
-  const [leftSelections, setLeftSelections] = useState<number[]>([0]); // Array of selected indices
-  const [rightSelections, setRightSelections] = useState<number[]>([Math.min(1, LOOPS.length - 1)]); // Array of selected indices
+  const { isPremium } = usePremium();
+  const router = useRouter();
+  // Only allow Delta and Ocean (index 0 and 6) and Theta (index 1) for non-premium
+  const allowedIndices = isPremium ? LOOPS.map((_, i) => i) : [0, 1, 6];
+  const [leftSelections, setLeftSelections] = useState<number[]>([0]);
+  const [rightSelections, setRightSelections] = useState<number[]>([1]);
   const [showPlayer, setShowPlayer] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  
-  // Validate initial selections on mount
+
+  // Ensure initial selections are valid indices
   useEffect(() => {
     // Add a small delay to ensure everything is properly initialized
     const timer = setTimeout(() => {
       // Ensure all selections are valid indices
       setLeftSelections(prev => {
-        const filtered = prev.filter(idx => idx >= 0 && idx < LOOPS.length);
-        return filtered.length > 0 ? filtered : [0];
+        const filtered = prev.filter(idx => allowedIndices.includes(idx));
+        return filtered.length > 0 ? filtered : [allowedIndices[0]];
       });
       setRightSelections(prev => {
-        const filtered = prev.filter(idx => idx >= 0 && idx < LOOPS.length);
-        return filtered.length > 0 ? filtered : [Math.min(1, LOOPS.length - 1)];
+        const filtered = prev.filter(idx => allowedIndices.includes(idx));
+        return filtered.length > 0 ? filtered : [allowedIndices[1] || allowedIndices[0]];
       });
       setIsInitialized(true);
     }, 100);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [isPremium]);
   
   const toggleLeftSelection = (idx: number) => {
+    if (!allowedIndices.includes(idx)) return;
     setLeftSelections(prev => {
       if (prev.includes(idx)) {
         // Remove if already selected, but keep at least one
@@ -90,6 +97,7 @@ export default function BinauralBeats() {
   };
 
   const toggleRightSelection = (idx: number) => {
+    if (!allowedIndices.includes(idx)) return;
     setRightSelections(prev => {
       if (prev.includes(idx)) {
         // Remove if already selected, but keep at least one
@@ -137,52 +145,76 @@ export default function BinauralBeats() {
     <LinearGradient
       colors={['#3a1c71', '#b993d6', '#fff']}
       style={styles.gradientBackground}
-    >      <View style={styles.header}>
+    >
+      <View style={styles.header}>
         <Text style={styles.headerTitle}>Custom Binaural Beats</Text>
         <Text style={styles.headerSubtitle}>
-          Select multiple loops for each ear to create custom soundscapes. Tap any loop to add or remove it from your selection. Use headphones for the best binaural experience!
+          Select Delta, Theta, or Ocean for each ear for free. Unlock all frequencies with Premium.
         </Text>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>Left Ear:</Text>
         <View style={styles.row}>
-          {LOOPS.map((loop, idx) => (
-            <TouchableOpacity
-              key={loop.name + 'L'}
-              style={[
-                styles.loopBtn,
-                ...(leftSelections.includes(idx) ? [styles.loopBtnActive] : []),
-              ]}
-              onPress={() => toggleLeftSelection(idx)}
-            >
-              <Text style={[
-                styles.loopBtnText,
-                ...(leftSelections.includes(idx) ? [styles.loopBtnTextActive] : []),
-              ]}>
-                {loop.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {LOOPS.map((loop, idx) => {
+            const locked = !allowedIndices.includes(idx);
+            return (
+              <TouchableOpacity
+                key={loop.name + 'L'}
+                style={[
+                  styles.loopBtn,
+                  ...(leftSelections.includes(idx) ? [styles.loopBtnActive] : []),
+                  locked ? { opacity: 0.4 } : {},
+                ]}
+                onPress={() => locked ? null : toggleLeftSelection(idx)}
+                disabled={locked}
+              >
+                <Text style={[
+                  styles.loopBtnText,
+                  ...(leftSelections.includes(idx) ? [styles.loopBtnTextActive] : []),
+                ]}>
+                  {loop.name}
+                </Text>
+                {locked && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                    <Ionicons name="lock-closed" size={14} color="#d76d77" />
+                    <Text style={{ color: '#d76d77', marginLeft: 4, fontWeight: 'bold' }}>Premium</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </View>
         <Text style={styles.label}>Right Ear:</Text>
         <View style={styles.row}>
-          {LOOPS.map((loop, idx) => (
-            <TouchableOpacity
-              key={loop.name + 'R'}
-              style={[
-                styles.loopBtn,
-                ...(rightSelections.includes(idx) ? [styles.loopBtnActive] : []),
-              ]}
-              onPress={() => toggleRightSelection(idx)}
-            >
-              <Text style={[
-                styles.loopBtnText,
-                ...(rightSelections.includes(idx) ? [styles.loopBtnTextActive] : []),
-              ]}>
-                {loop.name}
-              </Text>
-            </TouchableOpacity>
-          ))}        </View>
+          {LOOPS.map((loop, idx) => {
+            const locked = !allowedIndices.includes(idx);
+            return (
+              <TouchableOpacity
+                key={loop.name + 'R'}
+                style={[
+                  styles.loopBtn,
+                  ...(rightSelections.includes(idx) ? [styles.loopBtnActive] : []),
+                  locked ? { opacity: 0.4 } : {},
+                ]}
+                onPress={() => locked ? null : toggleRightSelection(idx)}
+                disabled={locked}
+              >
+                <Text style={[
+                  styles.loopBtnText,
+                  ...(rightSelections.includes(idx) ? [styles.loopBtnTextActive] : []),
+                ]}>
+                  {loop.name}
+                </Text>
+                {locked && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                    <Ionicons name="lock-closed" size={14} color="#d76d77" />
+                    <Text style={{ color: '#d76d77', marginLeft: 4, fontWeight: 'bold' }}>Premium</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
         <View style={styles.controlsRow}>
           <TouchableOpacity
             style={styles.controlBtn}
@@ -195,8 +227,34 @@ export default function BinauralBeats() {
           <Text style={styles.desc}>{leftSelectionString}</Text>
           <Text style={styles.desc}>{rightSelectionString}</Text>
         </View>
+        {/* Upgrade Banner */}
+        {!isPremium && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#3a1c71',
+              borderRadius: 12,
+              padding: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: 20,
+              marginHorizontal: 0,
+              shadowColor: '#000',
+              shadowOpacity: 0.2,
+              shadowOffset: { width: 0, height: 3 },
+              shadowRadius: 6,
+              elevation: 4,
+              alignSelf: 'stretch',
+            }}
+            onPress={() => router.push('/upgrade' as any)}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16, flex: 1, textAlign: 'center' }}>
+              Unlock All Binaural Beats
+            </Text>
+            <Ionicons name="chevron-forward" size={24} color="#fff" style={{ marginLeft: 4 }} />
+          </TouchableOpacity>
+        )}
       </ScrollView>
-
       {/* Popup Player Modal */}
       <Modal
         visible={showPlayer}
@@ -230,7 +288,7 @@ function AudioPlayer({ leftLoops, rightLoops, onClose }: AudioPlayerProps) {
   
   const leftSounds = useRef<Audio.Sound[]>([]);
   const rightSounds = useRef<Audio.Sound[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
 
   // Initialize audio session
   useEffect(() => {

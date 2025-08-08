@@ -52,9 +52,7 @@
       "eas": {
         "projectId": "717d2e56-cf27-4378-9898-9a5c0d27dca5"
       }
-    }
-  },
-  "cli": {
-    "appVersionSource": "appVersion"
+    },
+    "runtimeVersion": "1.0.0"
   }
 }
