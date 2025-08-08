@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { usePremium } from '../../contexts/PremiumContext';
+import { usePremium } from '../contexts/PremiumContext';
 import {
     View,
     Text,
