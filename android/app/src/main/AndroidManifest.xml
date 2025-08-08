@@ -29,7 +29,6 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="exp+meditate-learn-and-lucid-dream"/>
-        <data android:scheme="com.hidreamers.meditatelearnanddream"/>
       </intent-filter>
     </activity>
   </application>
