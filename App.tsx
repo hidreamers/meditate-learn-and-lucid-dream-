@@ -1,5 +1,1 @@
-import TabIndex from './app/index';
-
-export default function App() {
-  return <TabIndex />;
-}
+import 'expo-router/entry';

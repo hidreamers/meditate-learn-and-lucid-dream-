@@ -1,39 +1,69 @@
+
+import * as InAppPurchases from 'expo-in-app-purchases';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Mock product data for development
-const MOCK_PRODUCTS = [
-  {
-    productId: 'com.hidreamers.premiumupgrade',
-    title: 'Premium Upgrade',
-    description: 'Unlock all premium content',
-    price: 9.99,
-    localizedPrice: '$9.99',
-  }
-];
-
+const PRODUCT_IDS = ['com.hidreamers.premiumupgrade'];
 const PREMIUM_STATUS_KEY = '@hidreamers:premium_status';
 
 class IAP {
   isInitialized = false;
+  products = [];
 
-  // Get mock product info
+  // Initialize IAP connection and get products
+  init = async () => {
+    if (this.isInitialized) return;
+    await InAppPurchases.connectAsync();
+    this.isInitialized = true;
+    const { responseCode, results } = await InAppPurchases.getProductsAsync(PRODUCT_IDS);
+    if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+      this.products = results;
+    }
+  };
+
+  // Get product info
   getProductInfo = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return MOCK_PRODUCTS;
+    if (!this.isInitialized) await this.init();
+    return this.products;
   };
 
-  // Process purchase (mock)
+  // Request purchase
   requestPurchase = async (productId) => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    await this.savePremiumStatus(true);
-    return true;
+    if (!this.isInitialized) await this.init();
+    await InAppPurchases.purchaseItemAsync(productId);
   };
 
-  // Restore purchases (mock)
+  // Listen for purchase updates (should be called in a useEffect in your component)
+  purchaseListener = (callback) => {
+    return InAppPurchases.setPurchaseListener(async ({ responseCode, results, errorCode }) => {
+      if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+        for (const purchase of results) {
+          if (!purchase.acknowledged) {
+            if (purchase.productId === PRODUCT_IDS[0]) {
+              await this.savePremiumStatus(true);
+            }
+            await InAppPurchases.finishTransactionAsync(purchase, false);
+            callback && callback(purchase);
+          }
+        }
+      } else if (responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED) {
+        // User cancelled
+      } else {
+        // Error
+        console.error('IAP Error:', errorCode);
+      }
+    });
+  };
+
+  // Restore purchases
   restorePurchases = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    const status = await this.isPremium();
-    return status;
+    if (!this.isInitialized) await this.init();
+    const { responseCode, results } = await InAppPurchases.getPurchaseHistoryAsync();
+    if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+      const hasPremium = results.some(p => p.productId === PRODUCT_IDS[0]);
+      await this.savePremiumStatus(hasPremium);
+      return hasPremium;
+    }
+    return false;
   };
 
   // Save premium status
@@ -56,9 +86,9 @@ class IAP {
     }
   };
 
-  // Cleanup when app closes (if real IAP used)
+  // Cleanup when app closes
   disconnect = async () => {
-    if (this.isInitialized && typeof InAppPurchases !== 'undefined') {
+    if (this.isInitialized) {
       try {
         await InAppPurchases.disconnectAsync();
         this.isInitialized = false;

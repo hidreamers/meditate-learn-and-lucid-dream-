@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Platform, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
+import { useRouter } from 'expo-router';
 const { width } = Dimensions.get('window');
 
 const book = {
@@ -86,6 +87,7 @@ const chapters = [
 export default function ManifestationAudio() {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const soundRef = useRef<Audio.Sound | null>(null);
+  const router = useRouter();
 
   const stopAudio = async () => {
     if (soundRef.current) {
@@ -134,6 +136,10 @@ export default function ManifestationAudio() {
           resizeMode="contain"
         />
         <Text style={styles.bookDesc}>{book.description}</Text>
+        {/* Example upgrade button for locked content */}
+        <TouchableOpacity style={{margin: 16, backgroundColor: '#d76d77', borderRadius: 8, padding: 12}} onPress={() => router.push('/upgrade')}>
+          <Text style={{color: '#fff', fontWeight: 'bold'}}>Upgrade for Full Access</Text>
+        </TouchableOpacity>
         {chapters.map((chapter, idx) => (
           <View key={idx} style={styles.bookCard}>
             <LinearGradient

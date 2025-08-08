@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Platform, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
-import { Stack } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -46,6 +46,7 @@ export const options = {
 export default function JeremiahsBooksAudio() {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const soundRef = useRef<Audio.Sound | null>(null);
+  const router = useRouter();
 
   const stopAudio = async () => {
     if (soundRef.current) {
@@ -99,6 +100,9 @@ export default function JeremiahsBooksAudio() {
           {"\n\n"}
           My inspiration for "The Seventh Angel" stems from my deep interest in spiritual philosophy and the human psyche's untapped potentials.
         </Text>
+        <TouchableOpacity style={{margin: 16, backgroundColor: '#d76d77', borderRadius: 8, padding: 12}} onPress={() => router.push('/upgrade')}>
+          <Text style={{color: '#fff', fontWeight: 'bold'}}>Upgrade for Full Access</Text>
+        </TouchableOpacity>
         {chapters.map((chapter, idx) => (
           <View key={idx} style={styles.bookCard}>
             <LinearGradient
@@ -108,7 +112,7 @@ export default function JeremiahsBooksAudio() {
               <Image
                 source={{ uri: chapter.image }}
                 style={styles.chapterImage}
-                resizeMode="contain" // <-- This prevents cropping
+                resizeMode="contain"
               />
               <Text style={styles.chapterTitle}>{chapter.title}</Text>
               <TouchableOpacity
@@ -168,14 +172,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#3a1c71',
-    textAlign: 'left', // or 'justify'
+    textAlign: 'left',
   },
   description: {
     fontSize: 15,
     color: '#555',
     marginBottom: 18,
-    textAlign: 'center',      // <-- Center the text
-    paddingHorizontal: 16,    // <-- Add horizontal padding
+    textAlign: 'center',
+    paddingHorizontal: 16,
   },
   bookCard: {
     width: width - 32,
@@ -211,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#3a1c71',
-    textAlign: 'center', // keep centered
+    textAlign: 'center',
     width: '100%',
   },
   audioButton: {
@@ -220,7 +224,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 20,
     marginTop: 8,
-    alignSelf: 'center', // keep centered
+    alignSelf: 'center',
     shadowColor: '#3a1c71',
     shadowOpacity: 0.15,
     shadowRadius: 4,

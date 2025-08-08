@@ -96,6 +96,24 @@ export default function Meditation() {
               </Text>
             </View>
           </TouchableOpacity>
+
+          {/* Add an upgrade button at the bottom for non-premium users */}
+          <TouchableOpacity
+            style={{
+              marginTop: 16,
+              backgroundColor: '#d76d77',
+              borderRadius: 10,
+              paddingVertical: 12,
+              paddingHorizontal: 24,
+              alignSelf: 'center',
+            }}
+            onPress={() => router.push('/upgrade')}
+            activeOpacity={0.85}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+              Upgrade for Full Meditation Access
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </LinearGradient>
